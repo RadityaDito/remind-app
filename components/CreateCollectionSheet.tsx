@@ -33,6 +33,13 @@ import {
 } from "./ui/select";
 import { CollectionColor, CollectionColors } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { Separator } from "@radix-ui/react-separator";
+import { Button } from "./ui/button";
+import { createCollection } from "@/actions/collection";
+import { toast } from "./ui/use-toast";
+import { ReloadIcon } from "@radix-ui/react-icons";
+
+import { useRouter } from "next/navigation";
 
 interface CreateCollectionSheetProps {
   open: boolean;
@@ -43,17 +50,44 @@ const CreateCollectionSheet: FC<CreateCollectionSheetProps> = ({
   open,
   onOpenChange,
 }) => {
+  const router = useRouter();
+
   const form = useForm<createCollectionSchemaType>({
     resolver: zodResolver(createCollectionSchema),
     defaultValues: {},
   });
 
-  const onSubmit = (data: createCollectionSchemaType) => {
-    console.log(data);
+  const onSubmit = async (data: createCollectionSchemaType) => {
+    try {
+      console.log("Submitted");
+      await createCollection(data);
+
+      //Close the sheet
+      openChangeWrapper(false);
+      router.refresh();
+
+      toast({
+        title: "Success",
+        description: "Collection created successfully",
+      });
+    } catch (error: any) {
+      //Show toast
+      toast({
+        title: "Error",
+        description: "Something went wrong, please try again later",
+        variant: "destructive",
+      });
+      console.log("Error While Creating Collection", error);
+    }
+  };
+
+  const openChangeWrapper = (open: boolean) => {
+    form.reset();
+    onOpenChange(open);
   };
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={openChangeWrapper}>
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Add new collection</SheetTitle>
@@ -62,7 +96,10 @@ const CreateCollectionSheet: FC<CreateCollectionSheetProps> = ({
           </SheetDescription>
         </SheetHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -121,6 +158,23 @@ const CreateCollectionSheet: FC<CreateCollectionSheetProps> = ({
             />
           </form>
         </Form>
+        <div className="flex flex-col gap-3 mt-3">
+          <Separator />
+          <Button
+            disabled={form.formState.isSubmitting}
+            variant={"outline"}
+            className={cn(
+              form.watch("color") &&
+                CollectionColors[form.getValues("color") as CollectionColor]
+            )}
+            onClick={form.handleSubmit(onSubmit)}
+          >
+            Confirm
+            {form.formState.isSubmitting && (
+              <ReloadIcon className="w-4 h-4 animate-spin ml-2" />
+            )}
+          </Button>
+        </div>
       </SheetContent>
     </Sheet>
   );

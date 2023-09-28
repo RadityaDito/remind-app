@@ -1,7 +1,7 @@
 "use client";
 
 import { Collection, Task } from "@prisma/client";
-import { FC, useState, useTransition } from "react";
+import { FC, useMemo, useState, useTransition } from "react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -28,6 +28,7 @@ import { deleteCollection } from "@/actions/collection";
 import { toast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
 import CreateTaskDialog from "./CreateTaskDialog";
+import TaskCard from "./TaskCard";
 
 interface CollectionCardProps {
   collection: Collection & {
@@ -61,6 +62,15 @@ const CollectionCard: FC<CollectionCardProps> = ({ collection }) => {
       });
     }
   };
+
+  const tasksDone = useMemo(() => {
+    return collection.tasks.filter((task) => task.done).length;
+  }, [collection.tasks]);
+
+  const totalTasks = collection.tasks.length;
+
+  const progress = totalTasks === 0 ? 0 : (tasksDone / totalTasks) * 100;
+
   return (
     <>
       <CreateTaskDialog
@@ -84,15 +94,28 @@ const CollectionCard: FC<CollectionCardProps> = ({ collection }) => {
           </Button>
         </CollapsibleTrigger>
         <CollapsibleContent className="flex rounded-b-md flex-col dark:bg-neutral-900 shadow-lg ">
-          {tasks.length === 0 && <div>No Tasks</div>}
+          {tasks.length === 0 && (
+            <Button
+              variant={"ghost"}
+              className="flex items-center justify-center rounded-none gap-1 p-8 py-12"
+            >
+              <p>There are no task yet:</p>
+              <span
+                className={cn(
+                  "text-sm bg-clip-text text-transparent",
+                  CollectionColors[collection.color as CollectionColor]
+                )}
+              >
+                Create one
+              </span>
+            </Button>
+          )}
           {tasks.length > 0 && (
             <>
-              <Progress value={45} className="rounded-none" />
+              <Progress value={progress} className="rounded-none" />
               <div className="p-4 gap-3 flex flex-col">
                 {tasks.map((task) => (
-                  <div key={task.id} className="">
-                    {task.content}
-                  </div>
+                  <TaskCard key={task.id} task={task} />
                 ))}
               </div>
             </>

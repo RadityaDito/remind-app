@@ -73,11 +73,13 @@ async function CollectionList() {
   }
 
   return (
-    <div className="">
+    <>
       <CreateCollectionBtn />
-      {collections.map((collection) => (
-        <CollectionCard key={collection.id} collection={collection} />
-      ))}
-    </div>
+      <div className="flex flex-col gap-3 mt-4 ">
+        {collections.map((collection) => (
+          <CollectionCard key={collection.id} collection={collection} />
+        ))}
+      </div>
+    </>
   );
 }

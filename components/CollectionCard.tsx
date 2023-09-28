@@ -1,6 +1,6 @@
 "use client";
 
-import { Collection } from "@prisma/client";
+import { Collection, Task } from "@prisma/client";
 import { FC, useState, useTransition } from "react";
 import {
   Collapsible,
@@ -29,14 +29,16 @@ import { toast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
 
 interface CollectionCardProps {
-  collection: Collection;
+  collection: Collection & {
+    tasks: Task[];
+  };
 }
-
-const tasks = ["task 1", "task 2"];
 
 const CollectionCard: FC<CollectionCardProps> = ({ collection }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+
+  const tasks = collection.tasks;
 
   const [isLoading, startTranstition] = useTransition();
 
@@ -79,7 +81,9 @@ const CollectionCard: FC<CollectionCardProps> = ({ collection }) => {
             <Progress value={45} className="rounded-none" />
             <div className="p-4 gap-3 flex flex-col">
               {tasks.map((task) => (
-                <div className="">Mocked task</div>
+                <div key={task.id} className="">
+                  {task.content}
+                </div>
               ))}
             </div>
           </>

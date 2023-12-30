@@ -1,12 +1,9 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -16,20 +13,40 @@ model Collection {
   userId    String
   color     String
   createdAt DateTime @default(now())
-
-  tasks Task[]
+  tasks     Task[]
 
   @@unique([name, userId])
 }
 
 model Task {
-  id        Int       @id @default(autoincrement())
-  content   String
-  userId    String
-  done      Boolean   @default(false)
-  expiresAt DateTime?
-  createdAt DateTime  @default(now())
-
+  id           Int        @id @default(autoincrement())
+  content      String
+  userId       String
+  done         Boolean    @default(false)
+  expiresAt    DateTime?
+  createdAt    DateTime   @default(now())
   collectionId Int
   Collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+}
+
+model NoteCollection {
+  id        Int      @id @default(autoincrement())
+  name      String
+  userId    String
+  color     String
+  createdAt DateTime @default(now())
+  notes     Note[]
+
+  @@unique([name, userId])
+}
+
+model Note {
+  id           Int            @id @default(autoincrement())
+  title        String
+  content      String
+  userId       String
+  done         Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  collectionId Int
+  Collection   NoteCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
 }

@@ -5,10 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Separator } from "@/components/ui/separator";
 import NavBar from "@/components/NavBar";
 import { ThemeProvider } from "@/providers/ThemeProvider";
-<<<<<<< HEAD
-=======
 import { ChakraUIProvider } from "@/providers/ChakraUIProvider";
->>>>>>> a8735b16f11044926d02b0613fac9bab595f741f
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 

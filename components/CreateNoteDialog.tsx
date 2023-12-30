@@ -152,7 +152,7 @@ function CreateNoteDialog({ open, noteCollection, setOpen, note }: Props) {
                     <FormControl>
                       <Textarea
                         rows={5}
-                        placeholder="Task content here"
+                        placeholder="Note content here"
                         {...field}
                       />
                     </FormControl>

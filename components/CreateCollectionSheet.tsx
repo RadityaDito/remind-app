@@ -40,11 +40,8 @@ import { toast } from "./ui/use-toast";
 import { ReloadIcon } from "@radix-ui/react-icons";
 
 import { useRouter } from "next/navigation";
-<<<<<<< HEAD
-=======
 import { createNoteCollection } from "@/actions/noteCollection";
 import { createNoteCollectionSchemaType } from "@/schema/createNoteCollection";
->>>>>>> a8735b16f11044926d02b0613fac9bab595f741f
 
 interface CreateCollectionSheetProps {
   open: boolean;
@@ -86,8 +83,6 @@ const CreateCollectionSheet: FC<CreateCollectionSheetProps> = ({
     }
   };
 
-<<<<<<< HEAD
-=======
   const onSubmit2 = async (data: createNoteCollectionSchemaType) => {
     try {
       await createNoteCollection(data);
@@ -111,7 +106,6 @@ const CreateCollectionSheet: FC<CreateCollectionSheetProps> = ({
     }
   };
 
->>>>>>> a8735b16f11044926d02b0613fac9bab595f741f
   const openChangeWrapper = (open: boolean) => {
     form.reset();
     onOpenChange(open);
@@ -128,11 +122,7 @@ const CreateCollectionSheet: FC<CreateCollectionSheetProps> = ({
         </SheetHeader>
         <Form {...form}>
           <form
-<<<<<<< HEAD
-            onSubmit={form.handleSubmit(onSubmit)}
-=======
             onSubmit={form.handleSubmit(onSubmit2)}
->>>>>>> a8735b16f11044926d02b0613fac9bab595f741f
             className="flex flex-col space-y-4"
           >
             <FormField
@@ -202,11 +192,7 @@ const CreateCollectionSheet: FC<CreateCollectionSheetProps> = ({
               form.watch("color") &&
                 CollectionColors[form.getValues("color") as CollectionColor]
             )}
-<<<<<<< HEAD
-            onClick={form.handleSubmit(onSubmit)}
-=======
             onClick={form.handleSubmit(onSubmit2)}
->>>>>>> a8735b16f11044926d02b0613fac9bab595f741f
           >
             Confirm
             {form.formState.isSubmitting && (

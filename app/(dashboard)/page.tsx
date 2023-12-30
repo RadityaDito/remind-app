@@ -1,5 +1,9 @@
 import CollectionCard from "@/components/CollectionCard";
 import CreateCollectionBtn from "@/components/CreateCollectionBtn";
+<<<<<<< HEAD
+=======
+import NoteCollectionCard from "@/components/NoteCollectionCard";
+>>>>>>> a8735b16f11044926d02b0613fac9bab595f741f
 import SadFace from "@/components/icons/SadFace";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -60,6 +64,22 @@ async function CollectionList() {
     },
   });
 
+<<<<<<< HEAD
+=======
+  const noteCollections = await prisma.noteCollection.findMany({
+    where: {
+      userId: user?.id,
+    },
+    include: {
+      notes: {
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+    },
+  });
+
+>>>>>>> a8735b16f11044926d02b0613fac9bab595f741f
   if (collections.length === 0) {
     return (
       <div className="flex flex-col gap-5">
@@ -82,6 +102,16 @@ async function CollectionList() {
         {collections.map((collection) => (
           <CollectionCard key={collection.id} collection={collection} />
         ))}
+<<<<<<< HEAD
+=======
+
+        {noteCollections.map((noteCollection) => (
+          <NoteCollectionCard
+            key={noteCollection.id}
+            collection={noteCollection}
+          />
+        ))}
+>>>>>>> a8735b16f11044926d02b0613fac9bab595f741f
       </div>
     </>
   );

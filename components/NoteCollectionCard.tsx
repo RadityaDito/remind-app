@@ -30,20 +30,21 @@ import { useRouter } from "next/navigation";
 import CreateTaskDialog from "./CreateTaskDialog";
 import TaskCard from "./TaskCard";
 import CreateNoteDialog from "./CreateNoteDialog";
+import NoteCard from "./NoteCard";
 
-interface CollectionCardProps {
-  collection: Collection & {
-    tasks: Task[];
+interface NoteCollectionCardProps {
+  collection: NoteCollection & {
+    notes: Note[];
   };
 }
 
-const CollectionCard: FC<CollectionCardProps> = ({ collection }) => {
+const NoteCollectionCard: FC<NoteCollectionCardProps> = ({ collection }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const tasks = collection.tasks;
+  const notes = collection.notes;
 
   const [isLoading, startTranstition] = useTransition();
 
@@ -64,26 +65,26 @@ const CollectionCard: FC<CollectionCardProps> = ({ collection }) => {
     }
   };
 
-  const tasksDone = useMemo(() => {
-    return collection.tasks.filter((task) => task.done).length;
-  }, [collection.tasks]);
+  //   const tasksDone = useMemo(() => {
+  //     return collection.tasks.filter((task) => task.done).length;
+  //   }, [collection.tasks]);
 
-  const totalTasks = collection.tasks.length;
+  const totalNotes = collection.notes.length;
 
-  const progress = totalTasks === 0 ? 0 : (tasksDone / totalTasks) * 100;
+  //   const progress = totalTasks === 0 ? 0 : (tasksDone / totalTasks) * 100;
 
   return (
     <>
-      <CreateTaskDialog
+      {/* <CreateTaskDialog
         open={showCreateModal}
         setOpen={setShowCreateModal}
         collection={collection}
-      />
-      {/* <CreateNoteDialog
+      /> */}
+      <CreateNoteDialog
         open={showCreateModal}
         setOpen={setShowCreateModal}
-        noteCollection={noteCollection}
-      /> */}
+        noteCollection={collection}
+      />
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger asChild>
           <Button
@@ -100,7 +101,7 @@ const CollectionCard: FC<CollectionCardProps> = ({ collection }) => {
           </Button>
         </CollapsibleTrigger>
         <CollapsibleContent className="flex rounded-b-md flex-col dark:bg-neutral-900 shadow-lg ">
-          {tasks.length === 0 && (
+          {notes.length === 0 && (
             <Button
               variant={"ghost"}
               className="flex items-center justify-center rounded-none gap-1 p-8 py-12"
@@ -117,19 +118,28 @@ const CollectionCard: FC<CollectionCardProps> = ({ collection }) => {
               </span>
             </Button>
           )}
-          {tasks.length > 0 && (
+          {notes.length > 0 && (
             <>
-              <Progress value={progress} className="rounded-none" />
+              {/* <Progress value={progress} className="rounded-none" /> */}
               <div className="p-4 gap-3 flex flex-col">
-                {tasks.map((task) => (
-                  <TaskCard key={task.id} task={task} />
+                {notes.map((note) => (
+                  <div className="space-y-3">
+                    <NoteCard
+                      key={note.id}
+                      note={note}
+                      noteCollection={collection}
+                    />
+                  </div>
                 ))}
               </div>
             </>
           )}
           <Separator />
           <footer className="h-[40px] px-4 p-[2px] text-xs text-neutral-500 flex items-center justify-between">
-            <p>Created at {collection.createdAt.toLocaleDateString("id-ID")}</p>
+            <p>
+              Collection is Created at{" "}
+              {collection.createdAt.toLocaleDateString("id-ID")}
+            </p>
             {isLoading && <div>Deleting...</div>}
             {!isLoading && (
               <div>
@@ -152,7 +162,7 @@ const CollectionCard: FC<CollectionCardProps> = ({ collection }) => {
                     </AlertDialogTitle>
                     <AlertDialogDescription>
                       This action cannot be undone. This will be permanently
-                      delete your collection and task inside it
+                      delete your collection and note inside it
                     </AlertDialogDescription>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -175,4 +185,4 @@ const CollectionCard: FC<CollectionCardProps> = ({ collection }) => {
   );
 };
 
-export default CollectionCard;
+export default NoteCollectionCard;
